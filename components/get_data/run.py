@@ -7,7 +7,7 @@ import logging
 import os
 
 import requests
-import wandb
+from wandb import wandb
 import tempfile
 
 from wandb_utils.log_artifact import log_artifact
