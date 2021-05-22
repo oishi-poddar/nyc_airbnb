@@ -9,7 +9,7 @@ import os
 import requests
 from wandb import wandb
 import tempfile
-from components.wandb_utils.log_artifact import log_artifact
+# from components.wandb_utils.log_artifact import log_artifact
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)-15s %(message)s")
 logger = logging.getLogger()
@@ -24,13 +24,13 @@ def go(args):
     # than the available memory
     logger.info(f"Returning sample {args.sample}")
     logger.info(f"Uploading {args.artifact_name} to Weights & Biases")
-    log_artifact(
-        args.artifact_name,
-        args.artifact_type,
-        args.artifact_description,
-        os.path.join("data", args.sample),
-        run,
-    )
+#     log_artifact(
+#         args.artifact_name,
+#         args.artifact_type,
+#         args.artifact_description,
+#         os.path.join("data", args.sample),
+#         run,
+#     )
 
 
 if __name__ == "__main__":
