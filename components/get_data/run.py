@@ -9,8 +9,7 @@ import os
 import requests
 from wandb import wandb
 import tempfile
-
-from wandb_utils.log_artifact import log_artifact
+from components.wandb_utils.log_artifact import log_artifact
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)-15s %(message)s")
 logger = logging.getLogger()
