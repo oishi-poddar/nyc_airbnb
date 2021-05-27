@@ -43,6 +43,7 @@ def go(config: DictConfig):
             _ = mlflow.run(
                 f"{config['main']['components_repository']}/get_data",
                 "main",
+                version = "master",
                 parameters={
                     "sample": config["etl"]["sample"],
                     "artifact_name": "sample.csv",
