@@ -5,7 +5,9 @@ Performs basic cleaning on the data and save the results in Weights & Biases
 import argparse
 import logging
 import wandb
-
+import pandas as pd
+import os
+from wandb_utils.log_artifact import log_artifact
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)-15s %(message)s")
 logger = logging.getLogger()
@@ -18,12 +20,33 @@ def go(args):
 
     # Download input artifact. This will also log that this script is using this
     # particular version of the artifact
-    # artifact_local_path = run.use_artifact(args.input_artifact).file()
+    artifact_local_path = run.use_artifact(args.input_artifact).file()
+    df = pd.read_csv(artifact_local_path)
+    min_price = args.min_price
+    max_price = args.max_price
+    idx = df['price'].between(min_price, max_price)
+    df = df[idx].copy()
+    # Convert last_review to datetime
+    df['last_review'] = pd.to_datetime(df['last_review'])
+    idx = df['longitude'].between(-74.25, -73.50) & df['latitude'].between(40.5, 41.2)
+    df = df[idx]
+    df.to_csv("clean_sample.csv", index=False)
+    logger.info(f"Uploading {args.output_artifact} to Weights & Biases")
+    log_artifact(
+        args.output_artifact,
+        args.output_type,
+        args.output_description,
+        args.output_artifact,
+        run,
+    )
 
-    ######################
-    # YOUR CODE HERE     #
-    ######################
-
+    artifact = wandb.Artifact(
+        args.output_artifact,
+        type=args.output_type,
+        description=args.output_description,
+    )
+    artifact.add_file("clean_sample.csv")
+    run.log_artifact(artifact)
 
 if __name__ == "__main__":
 
@@ -31,44 +54,44 @@ if __name__ == "__main__":
 
 
     parser.add_argument(
-        "--parameters [parameter1", 
-        type=## INSERT TYPE HERE: str, float or int,
-        help=## INSERT DESCRIPTION HERE,
+        "--input_artifact",
+        type= str,
+        help= "name of artifact to be uploaded",
         required=True
     )
 
     parser.add_argument(
-        "--parameter2]: parameter1", 
-        type=## INSERT TYPE HERE: str, float or int,
-        help=## INSERT DESCRIPTION HERE,
+        "--output_artifact",
+        type=str,
+        help="name of output artifact ",
         required=True
     )
 
     parser.add_argument(
-        "--parameter2", 
-        type=## INSERT TYPE HERE: str, float or int,
-        help=## INSERT DESCRIPTION HERE,
+        "--output_type",
+        type=str,
+        help="type of output artifact",
         required=True
     )
 
     parser.add_argument(
-        "--parameter3parameter1", 
-        type=## INSERT TYPE HERE: str, float or int,
-        help=## INSERT DESCRIPTION HERE,
+        "--output_description",
+        type=str,
+        help="description of the output artifact",
         required=True
     )
 
     parser.add_argument(
-        "--parameter2", 
-        type=## INSERT TYPE HERE: str, float or int,
-        help=## INSERT DESCRIPTION HERE,
+        "--min_price",
+        type=float,
+        help="min price to consider",
         required=True
     )
 
     parser.add_argument(
-        "--parameter3", 
-        type=## INSERT TYPE HERE: str, float or int,
-        help=## INSERT DESCRIPTION HERE,
+        "--max_price",
+        type=float,
+        help="max price to consider",
         required=True
     )
 
