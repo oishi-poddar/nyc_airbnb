@@ -23,7 +23,6 @@ import wandb
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error
 from sklearn.pipeline import Pipeline, make_pipeline
-import feature_engineering
 
 def delta_date_feature(dates):
     """
@@ -197,7 +196,7 @@ def get_inference_pipeline(rf_config, max_tfidf_features):
     # a review for a long time), and then we create a new feature from it,
     date_imputer = make_pipeline(
         SimpleImputer(strategy='constant', fill_value='2010-01-01'),
-        FunctionTransformer(feature_engineering.delta_date_feature, check_inverse=False, validate=False)
+        FunctionTransformer(delta_date_feature, check_inverse=False, validate=False)
     )
 
     # Some minimal NLP for the "name" column
