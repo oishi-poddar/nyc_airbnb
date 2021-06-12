@@ -9,4 +9,4 @@ dependencies:
   - scikit-learn=0.24.1
   - pip:
       - wandb==0.10.31
-      - git+https://github.com/oishi-poddar/nyc_airbnb.gitt#egg=wandb-utils&subdirectory=components
+      - git+https://github.com/oishi-poddar/nyc_airbnb.git#egg=wandb-utils&subdirectory=components
